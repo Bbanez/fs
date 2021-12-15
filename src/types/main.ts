@@ -9,22 +9,27 @@ export interface FSFileTreeItem {
 export type FSFileTreeList = FSFileTreeItem[];
 
 export interface FS {
-  exist(root: string, isFile?: boolean): Promise<boolean>;
-  save(root: string, data: string | Buffer): Promise<void>;
-  mkdir(root: string): Promise<void>;
-  read(root: string): Promise<Buffer>;
-  readdir(root: string): Promise<string[]>;
-  deleteFile(root: string): Promise<void>;
-  deleteDir(root: string): Promise<void>;
-  rename(root: string, currName: string, newName: string): Promise<void>;
+  exist(root: string | string[], isFile?: boolean): Promise<boolean>;
+  save(root: string | string[], data: string | Buffer): Promise<void>;
+  mkdir(root: string | string[]): Promise<void>;
+  read(root: string | string[]): Promise<Buffer>;
+  readString(root: string | string[]): Promise<string>;
+  readdir(root: string | string[]): Promise<string[]>;
+  deleteFile(root: string | string[]): Promise<void>;
+  deleteDir(root: string | string[]): Promise<void>;
+  rename(
+    root: string | string[],
+    currName: string,
+    newName: string,
+  ): Promise<void>;
   fileTree(
-    startingLocation: string,
-    currentLocation: string,
+    startingLocation: string | string[],
+    currentLocation: string | string[],
   ): Promise<FSFileTreeList>;
-  copy(srcPath: string, destPath: string): Promise<void>;
-  move(srcPath: string, destPath: string): Promise<void>;
+  copy(srcPath: string | string[], destPath: string | string[]): Promise<void>;
+  move(srcPath: string | string[], destPath: string | string[]): Promise<void>;
 }
 
 export interface FSConfig {
-  base?: string;
+  base?: string | string[];
 }

@@ -10,13 +10,25 @@ export function createFS(config?: FSConfig): FS {
     config = {};
   }
 
-  const baseRoot = config.base ? config.base : '';
+  const baseRoot = config.base
+    ? config.base instanceof Array
+      ? path.join(...config.base)
+      : config.base
+    : '';
   const isWin = os.platform() === 'win32';
   const slash = isWin ? '\\' : '/';
 
+  function arrayPathToString(root: string | string[]): string {
+    return root instanceof Array ? path.join(...root) : root;
+  }
+
   const self: FS = {
-    async save(root, data) {
-      let parts = root.split(slash).filter((e) => !!e);
+    async save(_root, data) {
+      const root = arrayPathToString(_root);
+      let parts =
+        _root instanceof Array
+          ? _root.filter((e) => !!e)
+          : root.split(slash).filter((e) => !!e);
       let base = root.startsWith(slash) ? '' : `${baseRoot}`;
       if (root.startsWith(slash) || root.charAt(1) === ':') {
         base = '';
@@ -40,7 +52,8 @@ export function createFS(config?: FSConfig): FS {
       }
       await fsp.writeFile(path.join(base, parts[parts.length - 1]), data);
     },
-    async exist(root, isFile) {
+    async exist(_root, isFile) {
+      const root = arrayPathToString(_root);
       return new Promise<boolean>((resolve, reject) => {
         const pth =
           root.startsWith('/') || root.charAt(1) === ':'
@@ -64,37 +77,50 @@ export function createFS(config?: FSConfig): FS {
         });
       });
     },
-    async mkdir(root) {
+    async mkdir(_root) {
+      const root = arrayPathToString(_root);
       if (root.startsWith('/') || root.charAt(1) === ':') {
         return await fse.mkdirp(root);
       }
       return await fse.mkdirp(path.join(baseRoot, root));
     },
-    async read(root) {
+    async read(_root) {
+      const root = arrayPathToString(_root);
       if (root.startsWith('/') || root.charAt(1) === ':') {
         return await fsp.readFile(root);
       }
       return await fsp.readFile(path.join(baseRoot, root));
     },
-    async readdir(root) {
+    async readString(_root) {
+      const root = arrayPathToString(_root);
+      if (root.startsWith('/') || root.charAt(1) === ':') {
+        return (await fsp.readFile(root)).toString();
+      }
+      return (await fsp.readFile(path.join(baseRoot, root))).toString();
+    },
+    async readdir(_root) {
+      const root = arrayPathToString(_root);
       if (root.startsWith('/') || root.charAt(1) === ':') {
         return await fsp.readdir(root);
       }
       return await fsp.readdir(path.join(baseRoot, root));
     },
-    async deleteFile(root) {
+    async deleteFile(_root) {
+      const root = arrayPathToString(_root);
       if (root.startsWith('/') || root.charAt(1) === ':') {
         return await fsp.unlink(root);
       }
       await fsp.unlink(path.join(baseRoot, root));
     },
-    async deleteDir(root) {
+    async deleteDir(_root) {
+      const root = arrayPathToString(_root);
       if (root.startsWith('/') || root.charAt(1) === ':') {
         await fse.remove(root);
       }
       await fse.remove(path.join(baseRoot, root));
     },
-    async rename(root, currName, newName) {
+    async rename(_root, currName, newName) {
+      const root = arrayPathToString(_root);
       await self.move(
         root.startsWith('/') || root.charAt(1) === ':'
           ? path.join(root, currName)
@@ -104,7 +130,9 @@ export function createFS(config?: FSConfig): FS {
           : path.join(baseRoot, root, newName),
       );
     },
-    async fileTree(startingLocation, currentLocation) {
+    async fileTree(_startingLocation, _currentLocation) {
+      const startingLocation = arrayPathToString(_startingLocation);
+      const currentLocation = arrayPathToString(_currentLocation);
       const output: FSFileTreeList = [];
       const basePath =
         startingLocation.startsWith('/') || startingLocation.charAt(1) === ':'
@@ -139,7 +167,9 @@ export function createFS(config?: FSConfig): FS {
       }
       return output;
     },
-    async copy(srcPath, destPath) {
+    async copy(_srcPath, _destPath) {
+      const srcPath = arrayPathToString(_srcPath);
+      const destPath = arrayPathToString(_destPath);
       await fse.copy(
         srcPath.startsWith('/') || srcPath.charAt(1) === ':'
           ? srcPath
@@ -149,7 +179,9 @@ export function createFS(config?: FSConfig): FS {
           : path.join(baseRoot, destPath),
       );
     },
-    async move(srcPath, destPath) {
+    async move(_srcPath, _destPath) {
+      const srcPath = arrayPathToString(_srcPath);
+      const destPath = arrayPathToString(_destPath);
       await fse.move(
         srcPath.startsWith('/') || srcPath.charAt(1) === ':'
           ? srcPath
