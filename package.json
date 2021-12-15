@@ -1,0 +1,47 @@
+{
+  "name": "@banez/fs",
+  "version": "1.0.0",
+  "description": "Node.js file system utility..",
+  "author": "Branislav Vajagić",
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "build:ts": "tsc --project tsconfig.json",
+    "bundle": "npm-tool --bundle",
+    "link": "npm-tool  --link",
+    "link:sudo": "npm-tool  --link --sudo",
+    "unlink": "npm-tool  --unlink",
+    "unlink:sudo": "npm-tool  --unlink --sudo",
+    "publish": "npm-tool  --publish",
+    "pack": "npm-tool  --pack",
+    "lint": "eslint . --ext .ts",
+    "test": "mocha -r ts-node/register src/test/*.test.ts --recursive --exit",
+    "test:active": "mocha -r ts-node/register src/test/*.active.test.ts --recursive --exit"
+  },
+  "devDependencies": {
+    "@banez/npm-tool": "^1.0.1",
+    "@types/chai": "^4.2.22",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^15.6.2",
+    "@types/fs-extra": "^9.0.13",
+    "@typescript-eslint/eslint-plugin": "^4.26.0",
+    "@typescript-eslint/parser": "^4.26.0",
+    "chai": "^4.3.4",
+    "eslint": "^7.27.1",
+    "mocha": "^9.1.3",
+    "prettier": "^2.2.1",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.4.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bbanez/fs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Bbanez/fs/issues"
+  },
+  "homepage": "https://github.com/Bbanez/fs#readme",
+  "dependencies": {
+    "fs-extra": "^10.0.0"
+  }
+}
