@@ -4,7 +4,7 @@ import { createFS } from '../main';
 
 describe('FS', async () => {
   const fs = createFS({
-    base: path.join(__dirname, '_output'),
+    base: path.join(__dirname, '_output', 'test'),
   });
   it('should save test.txt', async () => {
     await fs.save('test.txt', 'This is test!');

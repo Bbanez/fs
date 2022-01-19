@@ -25,16 +25,11 @@ export function createFS(config?: FSConfig): FS {
   const self: FS = {
     async save(_root, data) {
       const root = arrayPathToString(_root);
-      let parts =
-        _root instanceof Array
-          ? _root.filter((e) => !!e)
-          : root.split(slash).filter((e) => !!e);
-      let base = root.startsWith(slash) ? '' : `${baseRoot}`;
-      if (root.startsWith(slash) || root.charAt(1) === ':') {
-        base = '';
-      } else {
-        parts = ['', ...parts];
-        base = `${baseRoot}`;
+      let parts = root.split(slash).filter((e) => !!e);
+      let base = '';
+      if (!root.startsWith(slash)) {
+        base = '/';
+        parts = [...baseRoot.split(slash), ...parts];
       }
       for (let j = 0; j < parts.length - 1; j++) {
         if (base) {
