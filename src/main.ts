@@ -26,17 +26,49 @@ export function createFS(config?: FSConfig): FS {
     async save(_root, data) {
       const root = arrayPathToString(_root);
       let parts = root.split(slash).filter((e) => !!e);
+      let isAbs = false;
       let base = '';
-      if (!root.startsWith(slash)) {
-        base = '/';
+      if (isWin) {
+        if (root.charAt(1) === ':') {
+          isAbs = true;
+          base = parts[0];
+          parts.splice(0, 1);
+        }
+      } else if (root.startsWith('/')) {
+        isAbs = true;
+      }
+      if (!isAbs) {
         parts = [...baseRoot.split(slash), ...parts];
       }
+      if (!isWin && !root.startsWith('/')) {
+        base = '/';
+      } else if (isWin && !isAbs) {
+        base = parts[0];
+        parts.splice(0, 1);
+      }
+      // if (!root.startsWith('/')) {
+      //   base = '/';
+      // } else {
+      //   if (isWin) {
+      //     if (parts[0].charAt(1) === ':') {
+      //       base = parts[0];
+      //       parts.splice(0, 1);
+      //     }
+      //   }
+      // }
+      // parts = [...baseRoot.split(slash), ...parts];
+      // if (!root.startsWith(slash)) {
+      //   base = '/'
+      //   if (isWin) {
+      //     base = '';
+      //     if (parts[0].charAt(1) === ':') {
+      //       base = parts[0];
+      //       parts.splice(0, 1)
+      //     }
+      //   }
+      // }
       for (let j = 0; j < parts.length - 1; j++) {
-        if (base) {
-          base = path.join(base, parts[j]);
-        } else {
-          base = path.join(slash, parts[j]);
-        }
+        base = path.join(base, parts[j]);
         try {
           if (!(await self.exist(base))) {
             await fsp.mkdir(base);

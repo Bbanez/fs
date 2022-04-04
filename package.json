@@ -8,6 +8,7 @@
   "scripts": {
     "build:ts": "tsc --project tsconfig.json",
     "bundle": "npm-tool --bundle",
+    "bundle:win": "node node_modules/@banez/npm-tool/bin/npm-tool.js --bundle",
     "link": "npm-tool  --link",
     "link:sudo": "npm-tool  --link --sudo yes",
     "unlink": "npm-tool  --unlink",
@@ -16,14 +17,16 @@
     "pack": "npm-tool  --pack",
     "lint": "eslint . --ext .ts",
     "test": "mocha -r ts-node/register src/test/*.test.ts --recursive --exit",
-    "test:active": "mocha -r ts-node/register src/test/*.active.test.ts --recursive --exit"
+    "test:active": "mocha -r ts-node/register src/test/*.active.test.ts --recursive --exit",
+    "t": "ts-node src/t.ts"
   },
   "devDependencies": {
+    "@banez/child_process": "^1.0.3",
     "@banez/npm-tool": "^1.0.1",
     "@types/chai": "^4.2.22",
+    "@types/fs-extra": "^9.0.13",
     "@types/mocha": "^9.0.0",
     "@types/node": "^15.6.2",
-    "@types/fs-extra": "^9.0.13",
     "@typescript-eslint/eslint-plugin": "^4.26.0",
     "@typescript-eslint/parser": "^4.26.0",
     "chai": "^4.3.4",

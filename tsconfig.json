@@ -13,7 +13,8 @@
     "rootDir": "src",
     "importsNotUsedAsValues": "error",
     "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": true,
+    "incremental": false
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "src/node_modules"]
