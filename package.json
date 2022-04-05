@@ -1,6 +1,6 @@
 {
   "name": "@banez/fs",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Node.js file system utility..",
   "author": "Branislav Vajagić",
   "license": "MIT",
