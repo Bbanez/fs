@@ -40,7 +40,7 @@ export function createFS(config?: FSConfig): FS {
       if (!isAbs) {
         parts = [...baseRoot.split(slash), ...parts];
       }
-      if (!isWin && !root.startsWith('/')) {
+      if (!isWin) {
         base = '/';
       } else if (isWin && !isAbs) {
         base = parts[0];
