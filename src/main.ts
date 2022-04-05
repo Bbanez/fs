@@ -46,27 +46,6 @@ export function createFS(config?: FSConfig): FS {
         base = parts[0];
         parts.splice(0, 1);
       }
-      // if (!root.startsWith('/')) {
-      //   base = '/';
-      // } else {
-      //   if (isWin) {
-      //     if (parts[0].charAt(1) === ':') {
-      //       base = parts[0];
-      //       parts.splice(0, 1);
-      //     }
-      //   }
-      // }
-      // parts = [...baseRoot.split(slash), ...parts];
-      // if (!root.startsWith(slash)) {
-      //   base = '/'
-      //   if (isWin) {
-      //     base = '';
-      //     if (parts[0].charAt(1) === ':') {
-      //       base = parts[0];
-      //       parts.splice(0, 1)
-      //     }
-      //   }
-      // }
       for (let j = 0; j < parts.length - 1; j++) {
         base = path.join(base, parts[j]);
         try {
@@ -79,6 +58,7 @@ export function createFS(config?: FSConfig): FS {
       }
       await fsp.writeFile(path.join(base, parts[parts.length - 1]), data);
     },
+
     async exist(_root, isFile) {
       const root = arrayPathToString(_root);
       return new Promise<boolean>((resolve, reject) => {
@@ -104,6 +84,7 @@ export function createFS(config?: FSConfig): FS {
         });
       });
     },
+
     async mkdir(_root) {
       const root = arrayPathToString(_root);
       if (root.startsWith('/') || root.charAt(1) === ':') {
@@ -125,6 +106,7 @@ export function createFS(config?: FSConfig): FS {
       }
       return (await fsp.readFile(path.join(baseRoot, root))).toString();
     },
+
     async readdir(_root) {
       const root = arrayPathToString(_root);
       if (root.startsWith('/') || root.charAt(1) === ':') {
@@ -132,6 +114,7 @@ export function createFS(config?: FSConfig): FS {
       }
       return await fsp.readdir(path.join(baseRoot, root));
     },
+
     async deleteFile(_root) {
       const root = arrayPathToString(_root);
       if (root.startsWith('/') || root.charAt(1) === ':') {
@@ -139,6 +122,7 @@ export function createFS(config?: FSConfig): FS {
       }
       await fsp.unlink(path.join(baseRoot, root));
     },
+
     async deleteDir(_root) {
       const root = arrayPathToString(_root);
       if (root.startsWith('/') || root.charAt(1) === ':') {
@@ -146,6 +130,7 @@ export function createFS(config?: FSConfig): FS {
       }
       await fse.remove(path.join(baseRoot, root));
     },
+
     async rename(_root, currName, newName) {
       const root = arrayPathToString(_root);
       await self.move(
@@ -157,6 +142,7 @@ export function createFS(config?: FSConfig): FS {
           : path.join(baseRoot, root, newName),
       );
     },
+
     async fileTree(_startingLocation, _currentLocation) {
       const startingLocation = arrayPathToString(_startingLocation);
       const currentLocation = arrayPathToString(_currentLocation);
@@ -194,6 +180,7 @@ export function createFS(config?: FSConfig): FS {
       }
       return output;
     },
+
     async copy(_srcPath, _destPath) {
       const srcPath = arrayPathToString(_srcPath);
       const destPath = arrayPathToString(_destPath);
@@ -206,6 +193,7 @@ export function createFS(config?: FSConfig): FS {
           : path.join(baseRoot, destPath),
       );
     },
+
     async move(_srcPath, _destPath) {
       const srcPath = arrayPathToString(_srcPath);
       const destPath = arrayPathToString(_destPath);
@@ -219,5 +207,6 @@ export function createFS(config?: FSConfig): FS {
       );
     },
   };
+
   return self;
 }
